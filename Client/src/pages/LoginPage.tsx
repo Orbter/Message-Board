@@ -1,9 +1,19 @@
 import { useState } from 'react';
-import { Logo } from '@/components/Logo';
+import { useNavigate } from 'react-router-dom';
+import { Logo } from '@/components/ui/Logo';
 import { insertName } from '@/api/insertName';
+import { useProvider } from '@/contexts/UserContext';
 function LoginPage() {
   const [name, setName] = useState('');
+  const navigate = useNavigate();
+  const { login } = useProvider();
 
+  const handleButtonClick = async (userName: string) => {
+    const isSuccess = await insertName(userName, login);
+    if (isSuccess) {
+      navigate('/home-screen');
+    }
+  };
   return (
     <div className='flex flex-col gap-10 justify-center items-center h-screen'>
       <div className='flex flex-col justify-center items-center'>
@@ -27,7 +37,7 @@ function LoginPage() {
         </div>
         <button
           className={` font-bold p-3 rounded-lg bg-primary w-96  ${name ? 'cursor-pointer' : 'opacity-40 '}`}
-          onClick={() => insertName(name)}
+          onClick={() => handleButtonClick(name)}
         >
           log in →
         </button>

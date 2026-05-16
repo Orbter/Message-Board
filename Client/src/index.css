@@ -4,6 +4,7 @@
   --color-background: #f9f9f9;
   --color-primary: #f3e260;
   --color-grey-border-main: #e5e5e5;
+  --color-grey-light: rgb(128 128 128 / 0.5);
 }
 :root {
   font-family: 'Inter', sans-serif;

@@ -1,4 +1,4 @@
-import sunIcon from '../assets/sun.svg';
+import sunIcon from '@/assets/sun.svg';
 
 interface LogoProps {
   icon?: string;
