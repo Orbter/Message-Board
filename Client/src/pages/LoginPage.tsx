@@ -1,26 +1,9 @@
 import { useState } from 'react';
 import { Logo } from '@/components/Logo';
+import { insertName } from '@/api/insertName';
 function LoginPage() {
   const [name, setName] = useState('');
-  const sendNameToServer = async (name: string) => {
-    try {
-      if (!name) return;
-      const response = await fetch('http://localhost:3001/api/save-name', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name }),
-      });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-      }
-    } catch (error) {
-      console.error('Error sending name to server:', error);
-    }
-  };
   return (
     <div className='flex flex-col gap-10 justify-center items-center h-screen'>
       <div className='flex flex-col justify-center items-center'>
@@ -44,7 +27,7 @@ function LoginPage() {
         </div>
         <button
           className={` font-bold p-3 rounded-lg bg-primary w-96  ${name ? 'cursor-pointer' : 'opacity-40 '}`}
-          onClick={() => sendNameToServer(name)}
+          onClick={() => insertName(name)}
         >
           log in →
         </button>
