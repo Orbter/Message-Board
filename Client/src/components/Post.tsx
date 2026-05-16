@@ -1,11 +1,18 @@
 import { Profile } from './ui/Profile';
 import { useProvider } from '@/contexts/UserContext';
 import { useState } from 'react';
+import { uploadingPost } from '@/api/uploadingPost';
 function Post() {
   const { user, isLoading, logout } = useProvider();
   const [userPost, setUserPost] = useState('');
   const characterLimit = 500;
-  const 
+  const handleButtonClick = async (userId: string, content: string) => {
+    const backResponse = await uploadingPost({ userId, content });
+    if (backResponse) {
+      console.log('uploded nice');
+      setUserPost('');
+    }
+  };
   return (
     <div className='flex gap-4 bg-white rounded-2xl p-5 flex-1 border border-grey-border-main'>
       <div>
@@ -38,6 +45,10 @@ function Post() {
               className={`bg-primary font-semibold flex justify-center items-center w-20 px-9 py-2 rounded-xl ${userPost.trim().length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
               type='submit'
               disabled={userPost.trim().length === 0}
+              onClick={(e) => {
+                e.preventDefault();
+                handleButtonClick(user.id, userPost);
+              }}
             >
               Post
             </button>

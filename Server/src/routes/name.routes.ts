@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-const router = express.Router();
+import express from 'express';
 import { handleLogin } from '../controllers/name.controller';
 
+const router = express.Router();
 router.post('/save-name', handleLogin);
 export default router;
