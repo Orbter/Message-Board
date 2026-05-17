@@ -1,8 +1,8 @@
 import express from 'express';
-import { handleCommentCount } from '@/controllers/comments.controller';
+import { handleCommentPost } from '@/controllers/comments.controller';
 
 const router = express.Router();
 
-router.get('/:id/count', handleCommentCount);
+router.get('/post/:id', handleCommentPost);
 
 export default router;

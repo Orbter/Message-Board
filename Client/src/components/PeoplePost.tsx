@@ -2,8 +2,11 @@ import { Profile } from './ui/Profile';
 import { HeartButton } from './ui/HeartButton';
 import { CommentButton } from './ui/CommentButton';
 import { useFormatDate } from '@/hooks/formatDate';
+import { useNavigate } from 'react-router-dom';
+
 interface PeoplePostProps {
   post: {
+    id: number;
     content: string;
     created_at: string;
     profiles?: { name: string };
@@ -13,9 +16,14 @@ interface PeoplePostProps {
 }
 
 function PeoplePost({ post, likesCount, commentsCount }: PeoplePostProps) {
-  const { content, created_at, profiles } = post;
+  const navigate = useNavigate();
+  const { id, content, created_at, profiles } = post;
   const authorName = profiles?.name || 'Anonymous';
   const formattedTime = useFormatDate(created_at);
+
+  const handleButtonClick = () => {
+    navigate(`/${id}/post`);
+  };
 
   return (
     <div className='flex flex-col rounded-2xl p-5 flex-1 bg-white border border-grey-border-main hover:shadow-md gap-4'>
@@ -34,7 +42,10 @@ function PeoplePost({ post, likesCount, commentsCount }: PeoplePostProps) {
           <HeartButton />
           <span className='text-xs font-medium'>{likesCount}</span>
         </div>
-        <div className='flex cursor-pointer items-center text-grey-light  transition-colors'>
+        <div
+          className='flex cursor-pointer items-center text-grey-light  transition-colors'
+          onClick={handleButtonClick}
+        >
           <CommentButton />
           <span className='text-xs font-medium'>{commentsCount}</span>
         </div>

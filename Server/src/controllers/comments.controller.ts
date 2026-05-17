@@ -1,22 +1,34 @@
 import { Request, Response } from 'express';
 import { supabase } from '@/utils/supabase.client';
 
-const handleCommentCount = async (req: Request, res: Response) => {
+const handleCommentPost = async (req: Request, res: Response) => {
   const postId = req.params.id;
-  if (!postId) {
-    res.status(400).json({ message: 'Missing postId parameter in comments' });
-    return;
+  try {
+    const { data, error } = await supabase
+      .from('comments')
+      .select(
+        `
+      id,
+      post_id,
+      user_id,
+      content,
+      created_at,
+      profiles( name ),
+      posts ( content )
+      likes( id ),
+      `,
+      )
+      .eq('post_id', postId)
+      .order('created_at', { ascending: false });
+    if (error) {
+      throw error;
+    }
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Failed to fetch comments' });
   }
-  const { count, error } = await supabase
-    .from('comments')
-    .select('*', { count: 'exact', head: true })
-    .eq('post_id', postId);
-  if (error) {
-    console.error('Database error:', error);
-    res.status(500).json({ message: 'Database error' });
-    return;
-  }
-  res.status(200).json({ count: count || 0 });
 };
 
-export { handleCommentCount };
+export { handleCommentPost };
