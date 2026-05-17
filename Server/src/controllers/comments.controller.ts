@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { supabase } from '@/utils/supabase.client';
 
 const handleCommentCount = async (req: Request, res: Response) => {
-  const postId = req.query.postId;
+  const postId = req.params.id;
   if (!postId) {
     res.status(400).json({ message: 'Missing postId parameter in comments' });
     return;

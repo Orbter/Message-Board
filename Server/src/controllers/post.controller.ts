@@ -22,36 +22,29 @@ const handlePost = async (req: Request, res: Response) => {
   });
 };
 const handleAllPost = async (req: Request, res: Response) => {
-  const { data, error } = await supabase
-    .from('posts')
-    .select('*')
-    .order('created_at', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select(
+        `
+        id,
+        content,
+        created_at,
+        user_id,
+        profiles ( name ),
+        likes ( id ),
+        comments ( id )
+      `,
+      )
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching from DB:', error);
+    if (error) throw error;
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
     res.status(500).json({ message: 'Error fetching posts from DB' });
-    return;
   }
-  res.status(200).json(data);
 };
 
-const handlePostLikes = async (req: Request, res: Response) => {
-  const postId = req.query.postId;
-  if (!postId) {
-    res.status(400).json({ message: 'Missing postId parameter' });
-    return;
-  }
-  const { data, error } = await supabase
-    .from('likes')
-    .select('*')
-    .eq('post_id', postId);
-
-  if (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Database error' });
-    return;
-  }
-  res.status(200).json(data);
-};
-
-export { handlePost, handleAllPost, handlePostLikes };
+export { handlePost, handleAllPost };
