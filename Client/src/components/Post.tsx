@@ -1,7 +1,7 @@
 import { Profile } from './ui/Profile';
 import { useProvider } from '@/contexts/UserContext';
 import { useState } from 'react';
-import { uploadingPost } from '@/api/uploadingPost';
+import { uploadingPost } from '@/api/post/uploadingPost';
 function Post() {
   const { user, isLoading, logout } = useProvider();
   const [userPost, setUserPost] = useState('');

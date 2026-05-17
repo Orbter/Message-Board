@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use('/api', nameRoutes);
 app.use('/post', postRoutes);
-
+app.use('/comments', postRoutes);
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
