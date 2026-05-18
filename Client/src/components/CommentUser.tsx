@@ -4,13 +4,14 @@ import { useProvider } from '@/contexts/UserContext';
 import { Profile } from './ui/Profile';
 import { Send } from 'lucide-react';
 import { uploadingComments } from '@/api/comments/uploadingComments';
-
-function CommentUser() {
+interface CommentUserProps {
+  onCommentAdded: () => Promise<void>;
+}
+function CommentUser({ onCommentAdded }: CommentUserProps) {
   const { user, isLoading } = useProvider();
   const [userComment, setUserComment] = useState(''); // Fixed casing
   const { postId } = useParams<{ postId: string }>();
 
-  // Handlers handle events caused by explicit user actions
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -24,6 +25,7 @@ function CommentUser() {
 
     if (backResponse) {
       setUserComment('');
+      await onCommentAdded();
     }
   };
 

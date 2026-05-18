@@ -26,6 +26,7 @@ const handleCommentPost = async (req: Request, res: Response) => {
       `,
       )
       .eq('id', postId)
+      .order('created_at', { referencedTable: 'comments', ascending: false })
       .single();
 
     if (error) throw error;

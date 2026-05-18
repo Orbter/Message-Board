@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
 import { Post } from '@/components/Post';
 import { useProvider } from '@/contexts/UserContext';
@@ -9,17 +9,21 @@ function MainPage() {
   const { isLoading } = useProvider();
   const [allPosts, setAllPosts] = useState<any[]>([]);
   const [fetchingData, setFetchingData] = useState(true);
+  const fetchFeed = useCallback(async () => {
+    const data = await getAllPosts();
+    if (data) {
+      setAllPosts(data);
+    }
+    setFetchingData(false);
+  }, []);
 
   useEffect(() => {
-    async function fetchFeed() {
-      const data = await getAllPosts();
-      if (data) {
-        setAllPosts(data);
-      }
+    async function init() {
+      await fetchFeed();
       setFetchingData(false);
     }
-    fetchFeed();
-  }, []);
+    init();
+  }, [fetchFeed]);
 
   if (isLoading || fetchingData) return <div>Loading your feed...</div>;
 
@@ -27,7 +31,7 @@ function MainPage() {
     <div className='flex flex-col h-screen bg-background'>
       <Header />
       <div className='w-full max-w-xl mx-auto mt-4'>
-        <Post />
+        <Post onPostCreated={fetchFeed} />
       </div>
       <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6'>
         {allPosts.map((post) => (

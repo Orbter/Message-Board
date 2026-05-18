@@ -2,7 +2,10 @@ import { Profile } from './ui/Profile';
 import { useProvider } from '@/contexts/UserContext';
 import { useState } from 'react';
 import { uploadingPost } from '@/api/post/uploadingPost';
-function Post() {
+interface PostProps {
+  onPostCreated: () => Promise<void>;
+}
+function Post({ onPostCreated }: PostProps) {
   const { user, isLoading, logout } = useProvider();
   const [userPost, setUserPost] = useState('');
   const characterLimit = 500;
@@ -11,6 +14,7 @@ function Post() {
     if (backResponse) {
       console.log('uploded nice');
       setUserPost('');
+      await onPostCreated();
     }
   };
   return (

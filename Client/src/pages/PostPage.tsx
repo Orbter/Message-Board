@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { PeoplePost } from '@/components/PeoplePost';
@@ -11,18 +11,21 @@ function PostPage() {
   const { postId } = useParams<{ postId: string }>();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchComments() {
-      if (!postId) return;
-      const data = await getCommentsPost({ postId });
-      if (data) {
-        setOpenPost(data);
-      }
-      setIsLoading(false);
+  const loadPageData = useCallback(async () => {
+    if (!postId) return;
+    const data = await getCommentsPost({ postId });
+    if (data) {
+      setOpenPost(data);
     }
-    fetchComments();
   }, [postId]);
 
+  useEffect(() => {
+    async function init() {
+      await loadPageData();
+      setIsLoading(false);
+    }
+    init();
+  }, [loadPageData]);
   if (isLoading || !openPost) {
     return (
       <div className='flex flex-col h-screen bg-background'>
@@ -43,7 +46,7 @@ function PostPage() {
           likesCount={openPost.likes ? openPost.likes.length : 0}
           commentsCount={openPost.comments ? openPost.comments.length : 0}
         />
-        <CommentUser />
+        <CommentUser onCommentAdded={loadPageData} />
       </div>
 
       <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6'>
