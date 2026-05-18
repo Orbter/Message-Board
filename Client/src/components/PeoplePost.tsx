@@ -22,7 +22,7 @@ function PeoplePost({ post, likesCount, commentsCount }: PeoplePostProps) {
   const formattedTime = useFormatDate(created_at);
 
   const handleButtonClick = () => {
-    navigate(`/${id}/post`);
+    navigate(`/post/${id}`);
   };
 
   return (

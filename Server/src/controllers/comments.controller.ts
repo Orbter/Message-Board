@@ -2,33 +2,58 @@ import { Request, Response } from 'express';
 import { supabase } from '@/utils/supabase.client';
 
 const handleCommentPost = async (req: Request, res: Response) => {
-  const postId = req.params.id;
+  const { postId } = req.params;
+  console.log('hi amit this is relly importent', req.body);
+
   try {
     const { data, error } = await supabase
-      .from('comments')
+      .from('posts')
       .select(
         `
-      id,
-      post_id,
-      user_id,
-      content,
-      created_at,
-      profiles( name ),
-      posts ( content )
-      likes( id ),
+        id,
+        content,
+        created_at,
+        user_id,
+        profiles ( name ),
+        likes ( id ),
+        comments (
+          id,
+          content,
+          created_at,
+          user_id,
+          profiles ( name ) 
+        )
       `,
       )
-      .eq('post_id', postId)
-      .order('created_at', { ascending: false });
-    if (error) {
-      throw error;
-    }
+      .eq('id', postId)
+      .single();
 
-    return res.status(200).json(data);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Failed to fetch comments' });
+    if (error) throw error;
+    console.log('hi amit this is relly importent', data);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching post' });
   }
 };
+const handleUploadComment = async (req: Request, res: Response) => {
+  const { userId, postId, content } = req.body;
+  console.log('req body:', req.body);
+  const { data, error } = await supabase
+    .from('comments')
+    .insert({ post_id: postId, user_id: userId, content: content })
+    .select('*');
 
-export { handleCommentPost };
+  if (error) {
+    console.error('Error saving to DB:', error);
+    res.status(500).json({ message: 'Error saving to DB' });
+    return;
+  }
+
+  const commentsInDb = data;
+  res.status(200).json({
+    message: 'Mission Success: Saved to Cloud!',
+    comment: commentsInDb,
+  });
+};
+
+export { handleCommentPost, handleUploadComment };

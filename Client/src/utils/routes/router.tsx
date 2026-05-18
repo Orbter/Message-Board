@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
-    path: '/post/:id',
+    path: '/post/:postId',
     element: <PostPage />,
   },
 ]);

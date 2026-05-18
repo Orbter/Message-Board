@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Heart } from 'lucide-react'; // ← replaces your SVG
+import { Heart } from 'lucide-react';
 
 interface HeartButtonProps {
   initialLiked?: boolean;
+  className: string;
   onChange?: (isLiked: boolean) => void;
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({
   initialLiked = false,
+  className = '',
   onChange,
 }) => {
   const [isLiked, setIsLiked] = useState(initialLiked);
@@ -21,7 +23,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   return (
     <button
       onClick={toggle}
-      className='group p-2 rounded-full  transition-colors cursor-pointer'
+      className={`group  rounded-full  transition-colors cursor-pointer ${className || 'p-2'} `}
       aria-label={isLiked ? 'Unlike' : 'Like'}
     >
       <Heart

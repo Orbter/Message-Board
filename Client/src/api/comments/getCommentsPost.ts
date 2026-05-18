@@ -1,7 +1,7 @@
 export const getCommentsPost = async ({ postId }: { postId: String }) => {
   try {
     const response = await fetch(
-      `http://localhost:3001/comments/post/:${postId}`,
+      `http://localhost:3001/comments/post/${postId}`,
     );
 
     if (response.ok) {
