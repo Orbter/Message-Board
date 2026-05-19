@@ -1,15 +1,18 @@
+import { useState } from 'react';
 import { Profile } from './ui/Profile';
 import { HeartButton } from './ui/HeartButton';
 import { CommentButton } from './ui/CommentButton';
 import { useFormatDate } from '@/hooks/formatDate';
 import { useNavigate } from 'react-router-dom';
-
+import { handleLikeToggle } from '@/hooks/handleLikeToggle';
+import { useProvider } from '@/contexts/UserContext';
 interface PeoplePostProps {
   post: {
     id: number;
     content: string;
     created_at: string;
     profiles?: { name: string };
+    likes?: { user_id: string }[];
   };
   likesCount: number;
   commentsCount: number;
@@ -21,6 +24,13 @@ function PeoplePost({ post, likesCount, commentsCount }: PeoplePostProps) {
   const authorName = profiles?.name || 'Anonymous';
   const formattedTime = useFormatDate(created_at);
 
+  const { user } = useProvider();
+  const [isLiked, setIsLiked] = useState(() => {
+    return post.likes
+      ? post.likes.some((like) => like.user_id === user?.id)
+      : false;
+  });
+  const [uiLikeCount, setUiLikedCount] = useState(likesCount);
   const handleButtonClick = () => {
     navigate(`/post/${id}`);
   };
@@ -38,10 +48,23 @@ function PeoplePost({ post, likesCount, commentsCount }: PeoplePostProps) {
       <p className='w-full text-sm text-gray-700'>{content}</p>
 
       <div className='flex gap-4 border-t border-grey-border-main pt-3 mt-1'>
-        <div className='flex cursor-pointer items-center text-grey-light  transition-colors'>
-          <HeartButton />
-          <span className='text-xs font-medium'>{likesCount}</span>
-        </div>
+        <button
+          className='flex cursor-pointer items-center text-grey-light  transition-colors'
+          onClick={() =>
+            handleLikeToggle({
+              isLiked,
+              setIsLiked,
+              likesCount: uiLikeCount,
+              setLikesCount: setUiLikedCount,
+              postId: id,
+              commentId: null,
+              userId: user?.id,
+            })
+          }
+        >
+          <HeartButton isLiked={isLiked} className='' />
+          <span className='text-xs font-medium'>{uiLikeCount}</span>
+        </button>
         <div
           className='flex cursor-pointer items-center text-grey-light  transition-colors'
           onClick={handleButtonClick}

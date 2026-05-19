@@ -30,10 +30,10 @@ function MainPage() {
   return (
     <div className='flex flex-col h-screen bg-background'>
       <Header />
-      <div className='w-full max-w-xl mx-auto mt-4'>
+      <div className='w-full max-w-xl mx-auto mt-4 p-1.5'>
         <Post onPostCreated={fetchFeed} />
       </div>
-      <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6'>
+      <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6 p-1.5'>
         {allPosts.map((post) => (
           <div key={post.id}>
             <PeoplePost

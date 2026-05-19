@@ -14,6 +14,7 @@ function PostPage() {
   const loadPageData = useCallback(async () => {
     if (!postId) return;
     const data = await getCommentsPost({ postId });
+    console.log(data);
     if (data) {
       setOpenPost(data);
     }
@@ -40,7 +41,7 @@ function PostPage() {
   return (
     <div className='flex flex-col h-screen bg-background'>
       <Header />
-      <div className='flex flex-col gap-10 w-full max-w-xl mx-auto mt-4'>
+      <div className='flex flex-col gap-10 w-full max-w-xl mx-auto mt-4 p-1.5'>
         <PeoplePost
           post={openPost}
           likesCount={openPost.likes ? openPost.likes.length : 0}
@@ -49,7 +50,7 @@ function PostPage() {
         <CommentUser onCommentAdded={loadPageData} />
       </div>
 
-      <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6'>
+      <div className='flex flex-col gap-4 w-full max-w-xl mx-auto mt-6 p-1.5'>
         {openPost.comments?.map((comment: any, index: number) => (
           <div key={index}>
             <CommentItem comment={comment} />

@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Profile } from './ui/Profile';
 import { HeartButton } from './ui/HeartButton';
 import { useFormatDate } from '@/hooks/formatDate';
-
+import { useProvider } from '@/contexts/UserContext';
+import { handleLikeToggle } from '@/hooks/handleLikeToggle';
 interface Comment {
+  id?: string;
+  postId?: string;
   profiles?: { name: string };
   created_at: string;
   content: string;
-  likesCount: number;
+  likes?: { user_id: string }[];
 }
 
 interface CommentItemProps {
@@ -17,19 +20,20 @@ interface CommentItemProps {
 
 function CommentItem({ comment }: CommentItemProps) {
   const formattedTime = useFormatDate(comment.created_at);
-  // ✅ Fix: default to 0 if likesCount is undefined/null
-  const [numberOfLikes, setNumberOfLikes] = useState(comment.likesCount ?? 0);
-
-  useEffect(() => {
-    // ✅ Fix: only update if we actually have a value
-    if (comment.likesCount !== undefined) {
-      setNumberOfLikes(comment.likesCount);
-    }
-  }, [comment.likesCount]);
+  console.log(JSON.stringify(comment, null, 2) + 'test');
+  const { user } = useProvider();
+  const [isLiked, setIsLiked] = useState(() => {
+    return comment.likes
+      ? comment.likes.some((like) => like.user_id == user?.id)
+      : false;
+  });
+  const [uiLikeCount, setUiLikedCount] = useState(
+    comment.likes ? comment.likes.length : 0,
+  );
+  const commentId = comment.id;
 
   return (
     <div className='flex items-start gap-4 px-4 py-5 border-b border-grey-border-main  hover:bg-gray-50/60 transition-colors duration-150'>
-      {/* Avatar */}
       <div className='shrink-0 mt-0.5'>
         <Profile
           name={comment.profiles?.name}
@@ -37,9 +41,7 @@ function CommentItem({ comment }: CommentItemProps) {
         />
       </div>
 
-      {/* Body */}
       <div className='flex-1 min-w-0 flex flex-col gap-2'>
-        {/* Header: name + time on same row */}
         <div className='flex items-center gap-2'>
           <span className='text-sm font-semibold text-gray-900 truncate'>
             {comment.profiles?.name || 'Anonymous'}
@@ -49,18 +51,29 @@ function CommentItem({ comment }: CommentItemProps) {
           </span>
         </div>
 
-        {/* Comment text */}
         <p className='text-sm text-gray-700 leading-relaxed break-words'>
           {comment.content}
         </p>
 
-        {/* Like button row */}
-        <div className='flex items-center gap-1.5 mt-0.5'>
-          <HeartButton className='p-0' />
+        <button
+          className='flex items-center gap-1.5 mt-0.5'
+          onClick={() =>
+            handleLikeToggle({
+              isLiked,
+              setIsLiked,
+              likesCount: uiLikeCount,
+              setLikesCount: setUiLikedCount,
+              postId: null,
+              commentId,
+              userId: user?.id,
+            })
+          }
+        >
+          <HeartButton isLiked={isLiked} className='p-0' />
           <span className='text-xs font-medium text-gray-500 tabular-nums'>
-            {numberOfLikes}
+            {uiLikeCount}
           </span>
-        </div>
+        </button>
       </div>
     </div>
   );

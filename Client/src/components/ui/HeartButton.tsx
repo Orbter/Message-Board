@@ -1,28 +1,17 @@
-import { useState } from 'react';
 import { Heart } from 'lucide-react';
 
 interface HeartButtonProps {
-  initialLiked?: boolean;
+  isLiked?: boolean;
   className: string;
   onChange?: (isLiked: boolean) => void;
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({
-  initialLiked = false,
+  isLiked = false,
   className = '',
-  onChange,
 }) => {
-  const [isLiked, setIsLiked] = useState(initialLiked);
-
-  const toggle = () => {
-    const next = !isLiked;
-    setIsLiked(next);
-    onChange?.(next);
-  };
-
   return (
     <button
-      onClick={toggle}
       className={`group  rounded-full  transition-colors cursor-pointer ${className || 'p-2'} `}
       aria-label={isLiked ? 'Unlike' : 'Like'}
     >

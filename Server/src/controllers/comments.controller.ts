@@ -3,7 +3,6 @@ import { supabase } from '@/utils/supabase.client';
 
 const handleCommentPost = async (req: Request, res: Response) => {
   const { postId } = req.params;
-  console.log('hi amit this is relly importent', req.body);
 
   try {
     const { data, error } = await supabase
@@ -15,13 +14,14 @@ const handleCommentPost = async (req: Request, res: Response) => {
         created_at,
         user_id,
         profiles ( name ),
-        likes ( id ),
+        likes ( user_id ),
         comments (
           id,
           content,
           created_at,
           user_id,
-          profiles ( name ) 
+          profiles ( name ),
+          likes ( user_id ) 
         )
       `,
       )
@@ -30,7 +30,6 @@ const handleCommentPost = async (req: Request, res: Response) => {
       .single();
 
     if (error) throw error;
-    console.log('hi amit this is relly importent', data);
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching post' });
