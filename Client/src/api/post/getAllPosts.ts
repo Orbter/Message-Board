@@ -4,7 +4,6 @@ export const getAllPosts = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('got data', data);
       return data;
     }
 

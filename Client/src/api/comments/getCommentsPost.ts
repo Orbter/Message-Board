@@ -6,7 +6,6 @@ export const getCommentsPost = async ({ postId }: { postId: String }) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('got data', data);
       return data;
     }
 

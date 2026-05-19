@@ -23,7 +23,6 @@ export const uploadingComments = async ({
     );
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       return true;
     }
   } catch (error) {

@@ -3,7 +3,6 @@ import { supabase } from '@/utils/supabase.client';
 
 const handlePost = async (req: Request, res: Response) => {
   const { userId, content } = req.body;
-  console.log('req.body:', req.body);
   const { data, error } = await supabase
     .from('posts')
     .insert({ user_id: userId, content: content })

@@ -14,7 +14,6 @@ export const insertName = async (
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       login({
         id: data.user.id,
         name: data.user.name,

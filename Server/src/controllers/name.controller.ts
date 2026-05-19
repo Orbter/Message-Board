@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { supabase } from '@/utils/supabase.client';
 export const handleLogin = async (req: Request, res: Response) => {
   const { name } = req.body;
-  console.log('Saving to DB:', name);
 
   const { data, error } = await supabase
     .from('profiles')

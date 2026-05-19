@@ -12,7 +12,6 @@ function Post({ onPostCreated }: PostProps) {
   const handleButtonClick = async (userId: string, content: string) => {
     const backResponse = await uploadingPost({ userId, content });
     if (backResponse) {
-      console.log('uploded nice');
       setUserPost('');
       await onPostCreated();
     }

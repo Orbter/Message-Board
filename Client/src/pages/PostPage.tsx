@@ -14,7 +14,6 @@ function PostPage() {
   const loadPageData = useCallback(async () => {
     if (!postId) return;
     const data = await getCommentsPost({ postId });
-    console.log(data);
     if (data) {
       setOpenPost(data);
     }

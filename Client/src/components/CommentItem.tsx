@@ -20,7 +20,6 @@ interface CommentItemProps {
 
 function CommentItem({ comment }: CommentItemProps) {
   const formattedTime = useFormatDate(comment.created_at);
-  console.log(JSON.stringify(comment, null, 2) + 'test');
   const { user } = useProvider();
   const [isLiked, setIsLiked] = useState(() => {
     return comment.likes

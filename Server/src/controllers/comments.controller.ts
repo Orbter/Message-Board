@@ -37,7 +37,6 @@ const handleCommentPost = async (req: Request, res: Response) => {
 };
 const handleUploadComment = async (req: Request, res: Response) => {
   const { userId, postId, content } = req.body;
-  console.log('req body:', req.body);
   const { data, error } = await supabase
     .from('comments')
     .insert({ post_id: postId, user_id: userId, content: content })
